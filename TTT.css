@@ -1,0 +1,38 @@
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: beige;
+}
+
+#header{
+    background-color: aqua;
+    height: 20%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10%;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 50px;
+}
+
+#board{
+    display: grid;
+    grid-template: repeat(3, 100px) / repeat(3, 100px);
+    border: 1px solid black ;
+
+}
+
+.square{
+    background-color: aquamarine;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black ;
+    width: 100px;
+    height: 100px;
+}
