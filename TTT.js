@@ -4,22 +4,31 @@ const GameController = (() => {
         const board = ['','','','','','','','','']
         const changeBoard = (i, symbol) => board[i] = symbol;
         const getBoard = () => board;
+        const clearBoard = () => {
+            for(let i=0;i<9;i++){
+                board[i] = '';
+            }
+        };
+
         return{
             changeBoard,
-            getBoard
+            getBoard,
+            clearBoard
         }
     })();
 
     const players = [
         {
-            playerOne: "playerOne",
-            token: 1
+            name: "playerOne",
+            token: 'X'
         },
         {
-            playerTwo: "playerTwo",
-            token: 2
+            name: "playerTwo",
+            token: 'Y'
         }
     ]
+
+    var currentPlayer = players[0];
 
     //renders board in HTML, adds event listeners
     const renderBoard = () => {
@@ -29,6 +38,7 @@ const GameController = (() => {
         for(let i=0;i<9;i++){
             const square = document.createElement("div");
             square.classList = "square";
+            square.id = i;
             square.textContent = board[i];
             square.addEventListener("click", () => {
                 handleInput(square);
@@ -40,14 +50,60 @@ const GameController = (() => {
     const handleInput = (square) => {
         const board = Gameboard.getBoard();
         const content = square.textContent;
+        const idx = square.id;
 
-        content == '' ? board[0] = 'x' : board[0] = '' 
-        renderBoard();
+        if(content == ''){
+            board[idx] = currentPlayer.token;
+            playTurn();
+            currentPlayer = currentPlayer == players[0] ? players[1] : players[0];
+        }
     }
 
+    const checkWinner = () => {
+        var winner;
+        const winningConditions = [
+            // Rows
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            // Columns
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            // Diagonals
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+        const board = Gameboard.getBoard();
+        // Check if any winning condition is met
+        for (const condition of winningConditions) {
+            const [a, b, c] = condition;
+            if (
+            board[a] !== '' &&
+            board[a] === board[b] &&
+            board[a] === board[c]
+            ) {
+            winner = board[a]; // Return the winning symbol (X or O)
+            }
+        }
+        winner == currentPlayer.token ? showWinner(currentPlayer) : null;
+    } 
+
+    function showWinner(player) {
+        document.getElementById('popup').style.display = 'block'; // Display the popup
+        document.getElementById('winMessage').textContent = player.name + ' wins!';
+        document.getElementById('newGame').addEventListener('click', newGame);
+    }
+
+    const newGame = () => {
+        Gameboard.clearBoard();
+        document.getElementById('popup').style.display = 'none';
+        playTurn();
+    }
 
     const playTurn = () => {
         renderBoard();
+        checkWinner();
     }
 
     return {
@@ -57,3 +113,4 @@ const GameController = (() => {
 })()
 
 GameController.playTurn()
+
