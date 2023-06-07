@@ -61,6 +61,7 @@ const GameController = (() => {
 
     const checkWinner = () => {
         var winner;
+        
         const winningConditions = [
             // Rows
             [0, 1, 2],
@@ -86,12 +87,21 @@ const GameController = (() => {
             winner = board[a]; // Return the winning symbol (X or O)
             }
         }
-        winner == currentPlayer.token ? showWinner(currentPlayer) : null;
+        winner == currentPlayer.token ? showWinner(currentPlayer.name + ' wins!') : null;
+
+        if(!winner){
+            for (square of board){
+                if(square == ''){
+                    return;
+                }
+            }
+            showWinner("Tie!")
+        }
     } 
 
-    function showWinner(player) {
+    function showWinner(message) {
         document.getElementById('popup').style.display = 'block'; // Display the popup
-        document.getElementById('winMessage').textContent = player.name + ' wins!';
+        document.getElementById('winMessage').textContent = message;
         document.getElementById('newGame').addEventListener('click', newGame);
     }
 
